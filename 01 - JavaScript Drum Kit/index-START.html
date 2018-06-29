@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 
@@ -57,10 +59,28 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+    function removeTransition(e) {
+      if (e.propertyName !== 'transform') return;
+      e.target.classList.remove('playing');
+    }
 
-</script>
+    function playSound(e) {
+      const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+      const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+      if (!audio) return; // if there is no associated key, then exit the rest of the function
+
+      key.classList.add('playing');
+      audio.currentTime = 0; // makes it so the sound starts playing again regardless of whether the previous play has completed
+      audio.play();
+    }
+
+    const keys = Array.from(document.querySelectorAll('.key')); // select all of the assigned keyes and add them to an array
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition)); // add an event listener to each key in the array and when the transition ends, remove the yellow border styling.
+    window.addEventListener('keydown', playSound); // when an approprite key is pressed, call the playSound function
+  </script>
 
 
 </body>
+
 </html>
